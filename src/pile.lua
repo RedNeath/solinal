@@ -35,11 +35,24 @@ function Pile:set_cards(cards)
 end
 
 function Pile:peek()
-    return self.cards[self.count]
+    local card = nil
+
+    if self.count > 0 then
+        card = self.cards[self.count]
+    end
+
+    return card
 end
 
 function Pile:pop()
     local card = table.remove(self.cards, self.count)
+    self.count = self.count - 1
+
+    return card
+end
+
+function Pile:remove_at(index)
+    local card = table.remove(self.cards, index)
     self.count = self.count - 1
 
     return card

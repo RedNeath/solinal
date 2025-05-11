@@ -1,22 +1,38 @@
+-- We need to do this before importing anything
+package.path = "../share/lua/5.4/?.lua"
+    .. ";../share/lua/5.4/?/init.lua"
+    .. ";../lib/lua/5.4/?.lua"
+    .. ";../lib/lua/5.4/?/init.lua;"
+    .. package.path
+    .. ";../lib/lua/5.4/?.so"
+    .. ";../lib/lua/5.4/loadall.so"
+    .. ";../bin/?.so"
+
+require 'commands.moveto'
 require 'commands.supply'
 
 require 'game'
 require 'game_settings'
 
+local split = require 'split'.split
+
 
 local command_table = {
-    supply = function (game, args)
-                 return Supply:new(game)
-             end,
+    supply= function (game, args)
+                return Supply:new(game)
+            end,
 
-    moveto = function (game, args)
-                 return nil
-             end,
+    moveto= function (game, args)
+                return Moveto:new(game, args)
+            end,
 }
 
-function match_command(game, input)
+function match_command(game, user_input)
+    local args = split(user_input, ' ')
+    local input = table.remove(args, 1)
+
     if command_table[input] then
-        return command_table[input](game, nil)
+        return command_table[input](game, args)
     else
         return nil
     end
