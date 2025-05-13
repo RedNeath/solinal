@@ -39,18 +39,18 @@ function match_command(game, user_input)
 end
 
 
-
 -- By default, we create a new game with default settings (settings.json)
 -- when starting the programme.
 local game_settings = GameSettings:new()
 local game = Game:new(game_settings)
 local exiting = false
 
-game:display()
+game:display(true)
 
 -- Here is the main programme loop. It is looping until the user explicitly
 -- asks for it to stop
 while not exiting do
+    io.write(">>> ")
     local input = io.read("*l")
     local game_command = match_command(game, input)
 
@@ -65,6 +65,6 @@ while not exiting do
     end
 
     -- At the end of the turn, we display the game, no matter what.
-    game:display()
+    game:display(true)
 end
 

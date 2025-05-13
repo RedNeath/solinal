@@ -1,9 +1,6 @@
-Pile = {
-    cards = {},
-    count = 0
-}
+require 'pile_iterator'
 
-local empty_pile = {
+EMPTY_PILE = {
     "+   -   +",
     "         ",
     "         ",
@@ -14,12 +11,19 @@ local empty_pile = {
     "+   -   +"
 }
 
+Pile = {
+    cards = {},
+    count = 0,
+    display_height = 0,
+}
+
 function Pile:new()
     local p = setmetatable({}, self)
     self.__index = self
 
     p.cards = {}
     p.count = 0
+    p.display_height = 8 -- Regular card height
 
     return p
 end
@@ -58,8 +62,20 @@ function Pile:remove_at(index)
     return card
 end
 
+function Pile:get_iterator()
+    return PileIterator:new(self)
+end
+
+function Pile:render_line(index)
+    if self.count == 0 then
+        return EMPTY_PILE[index]
+    else
+        return self:peek().representation[index]
+    end
+end
+
 function Pile:display_empty_pile()
-    for _,v in pairs(empty_pile) do
+    for _,v in pairs(EMPTY_PILE) do
         print(v)
     end
 end

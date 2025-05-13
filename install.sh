@@ -26,7 +26,6 @@ make install
 cd ..
 rm -Rf luarocks-3.11.1/
 
-
 # Install lua modules
 ./bin/luarocks install lunajson
 ./bin/luarocks install split

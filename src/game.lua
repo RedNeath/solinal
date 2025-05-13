@@ -5,6 +5,7 @@ require 'family'
 require 'card'
 
 Game = {
+    settings = nil,
     command_manager = nil,
     stock_pile = nil,
     supply_pile = nil,
@@ -16,6 +17,7 @@ function Game:new(game_settings)
     local g = setmetatable({}, self)
     self.__index = self
 
+    g.settings = game_settings
     g.command_manager = CommandManager:new(game_settings.history_size)
     g.stock_pile = Pile:new()
     g.supply_pile = Pile:new()
@@ -70,8 +72,86 @@ function Game:initialise()
     self.stock_pile:set_cards(deck)
 end
 
--- soon deprecated (made for debug purposes)
-function Game:display()
+function Game:render_superior_content()
+    -- We need to render elements line by line. Here, the number of lines to
+    -- write is fixed, so we could just use a simple for loop, but it's not
+    -- going to be the case for the board, so we'll use an iterator instead.
+    local stock_pile_it = self.stock_pile:get_iterator()
+    local supply_pile_it = self.supply_pile:get_iterator()
+    local pit_pile_1_it = self.pit[1]:get_iterator() -- Not a loop to make sure the order remains the same
+    local pit_pile_2_it = self.pit[2]:get_iterator()
+    local pit_pile_3_it = self.pit[3]:get_iterator()
+    local pit_pile_4_it = self.pit[4]:get_iterator()
+
+    local content = ""
+    while stock_pile_it:has_next()
+        or supply_pile_it:has_next()
+        or pit_pile_1_it:has_next()
+        or pit_pile_2_it:has_next()
+        or pit_pile_3_it:has_next()
+        or pit_pile_4_it:has_next()
+    do
+        content = content .. stock_pile_it:next() .. "  "
+            .. supply_pile_it:next()
+            .. "             "
+            .. pit_pile_1_it:next() .. "  "
+            .. pit_pile_2_it:next() .. "  "
+            .. pit_pile_3_it:next() .. "  "
+            .. pit_pile_4_it:next() .. "\n"
+    end
+
+    return content
+end
+
+function Game:render_board()
+    local pile_1_it = self.board[1]:get_iterator()
+    local pile_2_it = self.board[2]:get_iterator()
+    local pile_3_it = self.board[3]:get_iterator()
+    local pile_4_it = self.board[4]:get_iterator()
+    local pile_5_it = self.board[5]:get_iterator()
+    local pile_6_it = self.board[6]:get_iterator()
+    local pile_7_it = self.board[7]:get_iterator()
+
+    local content = ""
+    while pile_1_it:has_next()
+        or pile_2_it:has_next()
+        or pile_3_it:has_next()
+        or pile_4_it:has_next()
+        or pile_5_it:has_next()
+        or pile_6_it:has_next()
+        or pile_7_it:has_next()
+    do
+        content = content .. pile_1_it:next() .. "  "
+            .. pile_2_it:next() .. "  "
+            .. pile_3_it:next() .. "  "
+            .. pile_4_it:next() .. "  "
+            .. pile_5_it:next() .. "  "
+            .. pile_6_it:next() .. "  "
+            .. pile_7_it:next() .. "\n"
+    end
+
+    return content
+end
+
+function Game:clear_screen()
+    os.execute(self.settings.clear_command)
+end
+
+function Game:display(with_question)
+    self:clear_screen()
+
+    print("  STOCK      SUPPLY                 P 1        P 2        P 3        P 4")
+    print(self:render_superior_content())
+    print("   B 1        B 2        B 3        B 4        B 5        B 6        B 7")
+    print(self:render_board())
+
+    if with_question then
+        print("What action do you want to perform?")
+    end
+
+
+
+    --[[
     for k,v in pairs(self.board) do
         print("Board pile no. " .. k)
         v:display()
@@ -91,6 +171,7 @@ function Game:display()
         v:display()
         print()
     end
+    ]]
 end
 
 
@@ -98,7 +179,7 @@ end
 
 function shuffle_deck(cards)
     math.randomseed(os.time())
-    shuffled = {}
+    local shuffled = {}
     for i, v in ipairs(cards) do
 	    local pos = math.random(1, #shuffled+1)
 	    table.insert(shuffled, pos, v)
@@ -146,4 +227,3 @@ function create_family_cards(name, symbol, colour)
         Card:new(family, "K", nil)
     }
 end
-
