@@ -15,3 +15,6 @@ function Command:undo()
     return
 end
 
+function Command:get_name()
+    return self.name
+end

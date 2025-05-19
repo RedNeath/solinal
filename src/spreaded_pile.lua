@@ -15,6 +15,10 @@ function SpreadedPile:compute_display_height()
     end
 end
 
+function SpreadedPile:all_cards_upwards()
+    return self.count == 0 or not self.cards[1]:is_flipped()
+end
+
 function SpreadedPile:push(card)
     table.insert(self.cards, card)
     self.count = self.count + 1

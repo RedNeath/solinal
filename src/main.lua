@@ -53,9 +53,16 @@ while not exiting do
     io.write(">>> ")
     local input = io.read("*l")
     local game_command = match_command(game, input)
+    local last_command = game.command_manager:get_last_command()
+
+    if last_command and not game_command and input == "" then
+        game_command = match_command(game, last_command:get_name())
+    end
 
     if game_command then
         game.command_manager:execute_command(game_command)
+    elseif not game_command and input == "undo" then
+        game.command_manager:undo_last_command()
     elseif not game_command and input == "exit" then
         break
     elseif not game_command and input == "newgame" then

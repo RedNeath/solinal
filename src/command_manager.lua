@@ -39,3 +39,10 @@ function CommandManager:undo_last_command()
     self.is_history_empty = (#self.command_history == 0)
 end
 
+function CommandManager:get_last_command()
+    if self.is_history_empty then
+        return nil
+    end
+
+    return self.command_history[#self.command_history]
+end

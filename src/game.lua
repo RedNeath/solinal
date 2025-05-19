@@ -72,6 +72,16 @@ function Game:initialise()
     self.stock_pile:set_cards(deck)
 end
 
+function Game:all_cards_upwards()
+    for _,board_pile in pairs(self.board) do
+        if not board_pile:all_cards_upwards() then
+            return false
+        end
+    end
+
+    return true
+end
+
 function Game:render_superior_content()
     -- We need to render elements line by line. Here, the number of lines to
     -- write is fixed, so we could just use a simple for loop, but it's not
@@ -144,34 +154,14 @@ function Game:display(with_question)
     print(self:render_superior_content())
     print("   B 1        B 2        B 3        B 4        B 5        B 6        B 7")
     print(self:render_board())
+    
+    if self:all_cards_upwards() then
+        print("🎉 You won this game!") -- You can complete it automatically with the command \"finish\"!")
+    end
 
     if with_question then
         print("What action do you want to perform?")
     end
-
-
-
-    --[[
-    for k,v in pairs(self.board) do
-        print("Board pile no. " .. k)
-        v:display()
-        print()
-    end
-
-    print("Stock pile")
-    self.stock_pile:display()
-    print()
-
-    print("Supply pile")
-    self.supply_pile:display()
-    print()
-
-    for k,v in pairs (self.pit) do
-        print("Pit pile no. " .. k)
-        v:display()
-        print()
-    end
-    ]]
 end
 
 

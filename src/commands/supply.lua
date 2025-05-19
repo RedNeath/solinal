@@ -6,6 +6,7 @@ function Supply:new(game)
     local s = setmetatable({}, self)
     self.__index = self
 
+    s.name = "supply"
     s.game = game
 
     return s
@@ -28,6 +29,7 @@ function Supply:refill_supply_pile()
 end
 
 function Supply:execute()
+    -- os.execute(self.game.settings.audio_command .. self.game.settings.paths.assets.card_move)
     if self.game.stock_pile.count == 0 then
         self:refill_stock_pile()
     else
@@ -38,6 +40,7 @@ function Supply:execute()
 end
 
 function Supply:undo()
+    -- os.execute(self.game.settings.audio_command .. self.game.settings.paths.assets.card_move)
     if self.game.supply_pile.count == 0 then
         self:refill_supply_pile()
     else

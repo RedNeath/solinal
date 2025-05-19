@@ -6,6 +6,7 @@ function Moveto:new(game, args)
     local mt = setmetatable({}, self)
     self.__index = self
 
+    mt.name = "moveto"
     mt.game = game
 
     if not args[1] or not args[2] then
@@ -206,6 +207,7 @@ function Moveto:execute()
 
     -- And finally performing the move
     local source_pile = self:find_pile_by_id(cards_to_move.place)
+    -- os.execute(self.game.settings.audio_command .. self.game.settings.paths.assets.card_move)
     while #cards_to_move.cards > 0 do
         local card = table.remove(cards_to_move.cards, 1)
         source_pile.pile:remove_at(source_pile.pile.count - #cards_to_move.cards)
@@ -214,6 +216,8 @@ function Moveto:execute()
     end
 
     if source_pile.pile:peek() and source_pile.pile:peek():is_flipped() then
+        -- self.game:display()
+        -- os.execute(self.game.settings.audio_command .. self.game.settings.paths.assets.card_flip)
         self.flipped_card_on_top = true
         source_pile.pile:peek():flip()
     end

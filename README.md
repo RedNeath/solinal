@@ -2,6 +2,60 @@
 
 The SoliNal Project is about a solitaire game, written in Lua, and playable in the terminal.
 
+Table of contents:
+- [**Installation**](#installation)
+   - [Installation details](#installation-details)
+- [**Running the programme**](#running-the-programme)
+- [**User interactions (commands)**](#user-interactions-commands)
+- [**Known issues**](#known-issues)
+- [**Core concepts and vocabulary**](#core-concepts-and-vocabulary)
+- [**Game phases**](#game-phases)
+
+## Installation
+If you're on Linux or using WSL, that's only a 2 step process:
+1. Ensure gcc (GNU C Compiler) and unzip utilities are installed;
+2. run the `install.sh` script (without sudo mode!).
+
+And you should be good to go!
+
+If, however, you happen to want to run this app with another platform... expect to be thrown into the wilderness. You will have to recreate the install script, basing yourself on the Linux one available, as well as ensuring the required tools are installed on your machine.  
+At worst, you could also simply do everything manually. That's up to you.
+
+> **NOTE:**  
+> If something goes wrong during the installation process, instead of cleaning up everything yourself before to run the `install.sh` script again, know that the `reinstall.sh` script is there to do it for ya <3
+
+### Installation details
+The `install.sh` scripts downloads the latest version of Lua to this date, straight from the official ftp server. It then unzips it in the `lua-<version>` directory, before compiling it.
+
+Once done, it cleans up the installation a bit, by rearranging files and folders. Then it downloads Luarocks (Lua's most recognised package manager) straight off of their Github repository's releases. The downloaded archive is then unzipped into the `luarocks-<version>`.
+
+The utility is then configured and installed locally for the project, and two modules are installed via Luarocks:
+- **lunajson**;
+- and **split**.
+
+## Running the programme
+Just run the `play.sh` script, or an equivalent.
+
+## User interactions (commands)
+Here's the list of the commands that the player should be able to execute:
+- `moveto`, to move one of the card on the game plate (identified via its ID) to another pile (identified via its ID as well, or via the ID of the card on top of it);
+- `supply`, to move a card from the stock pile to the supply pile, or to refill the stock pile when empty;
+- `newgame`, to start a new game;
+- `exit`, to leave the game (maybe we'll implement some saving system in the future);
+- `undo`, to cancel the last action performed.
+
+> **NOTE:**  
+> `moveto` and `supply` are the two only *real* commands. The other ones affect the programme instead of the game. That is partly why they cannot be undone.
+
+Also, pressing return with an empty input will try to execute the same command as the last one performed. This is espacially useful when supplying over and over.
+
+> **NOTE:**  
+> This will only work for *real* commands.
+
+## Known issues
+- Using the `undo` command after calling `moveto` makes the game crash.
+- Using sound effects blocks the main thread, and stops execution while the sound is playing (this is why sounds are disabled).
+
 ## Core concepts and vocabulary
 Below are described the core concepts of this project:
 1. **TURN**: Each turn is manually triggered by the player when entering a valid turn input.
@@ -26,11 +80,3 @@ The game will be implemented in three phases:
 - finalisation, where the game is pretty much idle.
 
 *For simplification reasons, all cards will be flipped by default.
-
-## User interactions (commands)
-Here's the list of the commands that the player should be able to execute:
-- `moveto`, to move one of the card on the game plate (identified via its ID) to another pile (identified via its ID as well, or via the ID of the card on top of it);
-- `supply`, to move a card from the stock pile to the supply pile, or to refill the stock pile when empty;
-- `newgame`, to start a new game;
-- `exit`, to leave the game (maybe we'll implement some saving system in the future).
-

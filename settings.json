@@ -1,5 +1,12 @@
 {
     "history_size": 3,
-    "clear_command": "clear"
+    "clear_command": "clear",
+    "audio_command": "pw-play ",
+    "paths": {
+        "assets": {
+            "card_move": "../assets/card_move.ogg",
+            "card_flip": "../assets/card_flip.ogg"
+        }
+    }
 }
 
