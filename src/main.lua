@@ -10,6 +10,7 @@ package.path = "../share/lua/5.4/?.lua"
 
 require 'commands.moveto'
 require 'commands.supply'
+require 'commands.finish'
 
 require 'game'
 require 'game_settings'
@@ -24,6 +25,10 @@ local command_table = {
 
     moveto= function (game, args)
                 return Moveto:new(game, args)
+            end,
+    
+    finish= function (game, args)
+                return Finish:new(game)
             end,
 }
 

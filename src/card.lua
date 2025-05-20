@@ -53,6 +53,10 @@ function Card:continuous_value()
     return continuous_value(self.value)
 end
 
+function Card:text_value(value)
+    return text_value(value)
+end
+
 local continuous_values = {
     A = 1,
     ["2"] = 2,
@@ -68,6 +72,8 @@ local continuous_values = {
     Q = 12,
     K = 13
 }
+
+local text_values = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"}
 
 local templates = {
     reverse = { "---------", "|   _   |", "|  /°\\  |", "| (  o) |", "|  \\_/  |", "|       |", "|       |", "---------" },
@@ -104,6 +110,10 @@ local short_templates = {
 
 function continuous_value(value)
     return continuous_values[value]
+end
+
+function text_value(value)
+    return text_values[value]
 end
 
 function render_template(value, family_name, symbol, colour, direction)

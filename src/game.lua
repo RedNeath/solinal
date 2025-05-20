@@ -82,6 +82,116 @@ function Game:all_cards_upwards()
     return true
 end
 
+function Game:get_lowest_pit_index()
+    local lowest_index = 1
+
+    for index, pile in pairs(self.pit) do
+        if pile:peek():continuous_value() < self.pit[lowest_index]:peek():continuous_value() then
+            lowest_index = index
+        end
+    end
+
+    return lowest_index
+end
+
+function Game:find_cards_in_supply_pile(card_id)
+    local result = nil
+    local supply_card = self.supply_pile:peek()
+
+    if supply_card and supply_card.id == card_id then
+        result = {
+            cards = { supply_card },
+            place = "SUPPLY"
+        }
+    end
+
+    return result
+end
+
+function Game:find_cards_in_pit_piles(card_id)
+    local result = nil
+
+    for pile_index,pile in pairs(self.pit) do
+        local pit_card = pile:peek()
+
+        if pit_card and pit_card.id == card_id then
+            result = {
+                cards = { pit_card },
+                place = "P" .. pile_index
+            }
+            break
+        end
+    end
+
+    return result
+end
+
+function Game:find_cards_in_board_piles(card_id)
+    local result = nil
+
+    for pile_index,pile in pairs(self.board) do
+        for _,card in pairs(pile.cards) do
+            if result then -- We take the card and the cards on top of it.
+                table.insert(result.cards, card)
+            elseif not card:is_flipped() and card.id == card_id then
+                result = {
+                    cards = { card },
+                    place = "B" .. pile_index
+                }
+            end
+        end
+
+        if result then
+            break -- We found the card(s)
+        end
+    end
+
+    return result
+end
+
+function Game:find_card_by_id(card_id)
+    local result = self:find_cards_in_supply_pile(card_id)
+        or self:find_cards_in_pit_piles(card_id)
+        or self:find_cards_in_board_piles(card_id)
+
+    return result
+end
+
+function Game:find_pile_by_id(pile_id)
+    local result = nil
+    local pile_initial = string.sub(pile_id, 1, 1)
+    local pile_index = tonumber(string.sub(pile_id, 2, 2))
+
+    if pile_id == "SUPPLY" then
+        result = { 
+            pile = self.supply_pile,
+            type = "SUPPLY"
+        }
+
+    elseif pile_initial == "P"
+            and pile_index
+            and pile_index > 0
+            and pile_index <= #self.pit
+    then
+        result = { 
+            pile = self.pit[pile_index],
+            type = "PIT"
+        }
+
+    elseif pile_initial == "B"
+            and pile_index
+            and pile_index > 0
+            and pile_index <= #self.board
+    then
+        result = {
+            pile = self.board[pile_index],
+            type = "BOARD"
+        }
+    end
+
+    return result
+end
+
 function Game:render_superior_content()
     -- We need to render elements line by line. Here, the number of lines to
     -- write is fixed, so we could just use a simple for loop, but it's not
@@ -156,7 +266,7 @@ function Game:display(with_question)
     print(self:render_board())
     
     if self:all_cards_upwards() then
-        print("🎉 You won this game!") -- You can complete it automatically with the command \"finish\"!")
+        print("🎉 You won this game! You can complete it automatically with the command \"finish\"!")
     end
 
     if with_question then

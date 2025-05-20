@@ -10,7 +10,7 @@ cd ..
 mkdir bin
 mkdir include
 mv lua-5.4.7/src/lua bin/lua
-mv lua-5.4.7/src/lua.h include/lua.h
+mv lua-5.4.7/src/*.h include/
 rm -Rf lua-5.4.7/
 
 # Building luarocks
