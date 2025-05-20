@@ -31,7 +31,8 @@ function Finish:execute()
     local lowest_pit = self.game:get_lowest_pit_index()
     local pit_card = self.game.pit[lowest_pit]:peek()
     while pit_card:continuous_value() < 13 do
-        local target_card_id = pit_card.family.name .. pit_card:text_value
+        local target_card_id = pit_card.family.name .. pit_card:text_value(pit_card:continuous_value() + 1)
+        local target_card = self.game:find_card_by_id(target_card_id)
 
         -- Making sure the sought card is available before moving it
         while not target_card do
